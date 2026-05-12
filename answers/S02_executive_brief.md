@@ -15,6 +15,7 @@ Le premier modèle analytique NexaMart doit partir de `fact_sales`, au grain d'u
 - Dimensions retenues : produit, magasin, client, canal et date.
 - Les clés substituts (`product_key`, `store_key`, `customer_key`, `channel_key`) sont créées dans les dimensions et utilisées dans `fact_sales`.
 - `order_number` reste dans la table de faits comme dimension dégénérée, car il décrit la transaction sans nécessiter une dimension séparée.
+- Le diagramme du schéma en étoile est documenté dans `docs/schema-v1.md` et sa source Mermaid est dans `diagrams/schema-v1.mmd`.
 
 ## Preuve
 

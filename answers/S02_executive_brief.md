@@ -43,16 +43,16 @@ Résultat obtenu :
 
 | category | region | year | quarter | total_revenue | total_units | sales_lines |
 |---|---|---:|---:|---:|---:|---:|
-| Automotive | Ontario | 2025 | 4 | 6027.49 | 39 | 14 |
-| Pet Supplies | Québec | 2025 | 3 | 5753.44 | 34 | 13 |
-| Pet Supplies | Québec | 2025 | 4 | 5676.32 | 34 | 15 |
-| Books & Media | Québec | 2025 | 4 | 5553.40 | 41 | 17 |
-| Books & Media | Ontario | 2025 | 4 | 5262.22 | 38 | 12 |
-| Pet Supplies | Québec | 2025 | 1 | 4981.45 | 30 | 12 |
-| Automotive | Ontario | 2025 | 1 | 4733.92 | 32 | 14 |
-| Toys & Games | Québec | 2025 | 2 | 4696.67 | 40 | 15 |
-| Pet Supplies | Ontario | 2025 | 2 | 4554.66 | 27 | 13 |
-| Automotive | Québec | 2025 | 2 | 4509.32 | 30 | 12 |
+| Pet Supplies | Ontario | 2025 | 3 | 11487.44 | 71 | 26 |
+| Books & Media | Québec | 2025 | 1 | 11117.10 | 86 | 31 |
+| Toys & Games | Québec | 2025 | 3 | 10434.08 | 88 | 35 |
+| Grocery | Québec | 2025 | 3 | 10406.49 | 125 | 52 |
+| Grocery | Ontario | 2025 | 3 | 9929.96 | 121 | 49 |
+| Toys & Games | Ontario | 2025 | 3 | 9665.87 | 80 | 31 |
+| Toys & Games | Québec | 2025 | 1 | 9385.84 | 79 | 30 |
+| Grocery | Ontario | 2025 | 2 | 9296.35 | 110 | 44 |
+| Books & Media | Québec | 2025 | 3 | 8903.41 | 67 | 32 |
+| Toys & Games | Ontario | 2025 | 2 | 8827.30 | 74 | 29 |
 
 Ce résultat prouve que le schéma permet de regrouper les ventes par catégorie, région et trimestre, ce qui rend ensuite possible l'analyse des déclins.
 

@@ -26,6 +26,13 @@
 <!-- Ajoutez vos entrées ci-dessous -->
 ### 2026-05-12 — Séance S02
 - **Modèle :** ChatGPT-5 / Codex
+- **Prompt :** « can you complete those for me? »
+- **Résultat :** L'IA a ajouté `sql/analysis/s02-first-answer.sql`, ajouté `docs/board-briefs/s02-star-schema.md`, complété l'entrée S02 dans `docs/decision-log.md`, puis ajusté le tableau de preuve dans `answers/S02_executive_brief.md` avec les résultats réels de DuckDB.
+- **Validation :** La requête `sql/analysis/s02-first-answer.sql` a été exécutée contre `db/nexamart.duckdb` et a retourné 10 lignes avec les colonnes attendues : `category`, `region`, `year`, `quarter`, `total_revenue`, `total_units`, `sales_lines`.
+- **Justification :** Cette interaction a servi à compléter les artefacts manquants du livrable S02 et à rendre la preuve SQL reproductible.
+
+### 2026-05-12 — Séance S02
+- **Modèle :** ChatGPT-5 / Codex
 - **Prompt :** « ok can you create those files for me: sql/dims/dim_product.sql sql/dims/dim_customer.sql sql/dims/dim_store.sql sql/dims/dim_date.sql sql/dims/dim_channel.sql sql/facts/fact_sales.sql answers/S02_executive_brief.md »
 - **Résultat :** L'IA a créé les fichiers SQL de dimensions, la table de faits `fact_sales`, et une première version du brief exécutif S02.
 - **Validation :** À valider avec `.\run.ps1 load` puis `.\run.ps1 check`; les résultats réels de la requête de preuve doivent être ajoutés dans le brief.

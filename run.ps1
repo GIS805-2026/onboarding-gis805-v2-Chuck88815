@@ -29,8 +29,14 @@ function Get-TeamSeed {
         Write-Warning "Could not compute team seed. Using default 1."
         return 1
     }
-    $userName = & git config user.name 2>$null
-    Write-Host "  TEAM_SEED = $seed  (from git user '$userName')"
+    $gitCmd = Get-Command git -ErrorAction SilentlyContinue
+    if ($gitCmd) {
+        $userName = & git config user.name 2>$null
+        Write-Host "  TEAM_SEED = $seed  (from git user '$userName')"
+    }
+    else {
+        Write-Warning "Git is not available on PATH. Using fallback TEAM_SEED = $seed."
+    }
     return [int64]$seed
 }
 

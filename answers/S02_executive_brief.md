@@ -54,6 +54,8 @@ Résultat obtenu :
 | Pet Supplies | Ontario | 2025 | 2 | 4554.66 | 27 | 13 |
 | Automotive | Québec | 2025 | 2 | 4509.32 | 30 | 12 |
 
+Ce résultat prouve que le schéma permet de regrouper les ventes par catégorie, région et trimestre, ce qui rend ensuite possible l'analyse des déclins.
+
 ## Validation
 
 La validation se fait en exécutant :

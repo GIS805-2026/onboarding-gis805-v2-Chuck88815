@@ -1,4 +1,4 @@
-# Board Brief — S01
+# Board Brief - S01
 
 ## Question du CEO
 
@@ -6,44 +6,31 @@
 
 ## Réponse exécutive
 
-Les données actuellement disponibles sont structurées selon une logique OLTP (Online Transaction Processing), principalement orientée vers l’enregistrement des transactions opérationnelles. Dans leur état actuel, elles ne permettent pas de répondre efficacement à la question stratégique du CEO concernant les catégories en déclin par région.
+Les données actuellement disponibles sont structurées selon une logique OLTP (Online Transaction Processing), principalement orientée vers l'enregistrement des transactions opérationnelles. Les ventes brutes seules ne suffisent pas à répondre efficacement à la question stratégique du CEO; elles doivent être enrichies par des dimensions analytiques.
 
-Les tables brutes (raw_fact_* et raw_dim_*) contiennent principalement des identifiants transactionnels (product_id, store_id, customer_id) sans hiérarchies analytiques complètes permettant de produire des agrégations multidimensionnelles fiables.
+La table de ventes contient principalement des identifiants transactionnels (`product_id`, `store_id`, `customer_id`). Pour comprendre les catégories, les régions et les tendances temporelles, il faut joindre ces identifiants aux dimensions produit, magasin et date.
 
 Afin de produire une analyse exploitable pour la direction, il est nécessaire de transformer les données transactionnelles en un modèle OLAP (Online Analytical Processing) reposant sur un schéma en étoile.
 
-
-
 ## Décisions de modélisation
+
 Pour répondre à la question exécutive, les décisions de modélisation suivantes sont proposées :
 
-Construire une table de faits analytique fact_sales
-Définir un grain analytique par produit vendu et par transaction
-Créer plusieurs dimensions descriptives :
-dim_product
-dim_store
-dim_customer
-dim_date
-Intégrer des hiérarchies analytiques :
-produit → catégorie → sous-catégorie
-magasin → région → province
-Ajouter des attributs permettant les analyses exécutives :
-catégorie
-sous-catégorie
-région
-province
-canal de vente
-période temporelle
+- Construire une table de faits analytique `fact_sales`.
+- Définir un grain analytique par produit vendu et par transaction.
+- Créer les dimensions descriptives `dim_product`, `dim_store`, `dim_customer` et `dim_date`.
+- Intégrer les hiérarchies analytiques produit -> catégorie -> sous-catégorie et magasin -> région -> province.
+- Ajouter les attributs utiles aux analyses exécutives : catégorie, sous-catégorie, région, province, canal de vente et période temporelle.
 
-Cette structure permettra d’effectuer des analyses multidimensionnelles sur :
+Cette structure permettra d'effectuer des analyses multidimensionnelles sur :
 
-les ventes par catégorie,
-les tendances régionales,
-les variations temporelles,
-les catégories en déclin.
-
+- les ventes par catégorie;
+- les tendances régionales;
+- les variations temporelles;
+- les catégories en déclin.
 
 ## Preuve
+
 Pour répondre à la question du CEO, il faut relier les ventes aux dimensions produit, magasin et date. La requête ci-dessous calcule le revenu par catégorie, région et trimestre, puis compare chaque trimestre au trimestre précédent.
 
 ```sql
@@ -95,10 +82,25 @@ ORDER BY revenue_change ASC
 LIMIT 10;
 ```
 
+Résultat obtenu :
+
+| category | region | year | quarter | total_revenue | previous_quarter_revenue | revenue_change |
+|---|---|---:|---:|---:|---:|---:|
+| Toys & Games | Québec | 2025 | 3 | 2219.82 | 4696.67 | -2476.85 |
+| Grocery | Alberta | 2025 | 3 | 1140.62 | 3450.41 | -2309.79 |
+| Automotive | Ontario | 2025 | 2 | 2457.95 | 4733.92 | -2275.97 |
+| Books & Media | Estrie | 2025 | 4 | 844.94 | 3116.08 | -2271.14 |
+| Automotive | Estrie | 2025 | 3 | 1764.10 | 3793.53 | -2029.43 |
+| Books & Media | Alberta | 2025 | 3 | 1723.78 | 3657.77 | -1933.99 |
+| Grocery | Ontario | 2025 | 2 | 1155.64 | 3086.67 | -1931.03 |
+| Pet Supplies | BC | 2025 | 3 | 1471.35 | 3390.76 | -1919.41 |
+| Beauty & Health | Ontario | 2025 | 3 | 1046.42 | 2815.35 | -1768.93 |
+| Grocery | Outaouais | 2025 | 3 | 962.89 | 2635.37 | -1672.48 |
+
 Cette preuve montre que la question est techniquement possible seulement si les ventes sont enrichies avec les dimensions analytiques. Sans les jointures vers `raw_dim_product`, `raw_dim_store` et `raw_dim_date`, la table de ventes seule ne permettrait pas d'interpréter les catégories, les régions ou les tendances trimestrielles.
 
-
 ## Validation
+
 Les validations minimales sont :
 
 ```sql
@@ -127,38 +129,31 @@ WHERE s.store_id IS NULL;
 
 Si les deux derniers résultats retournent `0`, les ventes peuvent être reliées correctement aux dimensions produit et magasin.
 
-
-
-
 ## Risques / limites
-L’utilisation directe des tables raw_fact_sales comporte plusieurs limites importantes :
 
-Absence d’attributs descriptifs nécessaires à l’analyse stratégique
-Absence de hiérarchies analytiques :
-produit → catégorie → sous-catégorie
-magasin → région → province
-Difficulté à produire des indicateurs agrégés cohérents
-Risque d’interprétation erronée des tendances
-Analyses temporelles limitées
-Modèle transactionnel non optimisé pour les analyses exécutives
+L'utilisation directe des tables `raw_fact_sales` comporte plusieurs limites importantes :
+
+- Absence d'attributs descriptifs nécessaires à l'analyse stratégique.
+- Absence de hiérarchies analytiques complètes, comme produit -> catégorie -> sous-catégorie et magasin -> région -> province.
+- Difficulté à produire des indicateurs agrégés cohérents.
+- Risque d'interprétation erronée des tendances.
+- Analyses temporelles limitées sans dimension date.
+- Modèle transactionnel non optimisé pour les analyses exécutives.
 
 Dans cet état, les données ne permettent pas de soutenir adéquatement la prise de décision de la direction.
 
-
 ## Prochaine recommandation
-Construire un schéma en étoile (star schema) orienté OLAP
-Créer les dimensions analytiques nécessaires
-Transformer les tables raw_* vers des tables dimensionnelles finales
-Exécuter le pipeline analytique : make load
+
+La prochaine étape est de construire un schéma en étoile orienté OLAP :
+
+- créer les dimensions analytiques nécessaires;
+- transformer les tables `raw_*` vers des tables dimensionnelles finales;
+- exécuter le pipeline analytique avec `make load` ou `.\run.ps1 load`.
 
 Une fois les dimensions disponibles :
 
-vérifier la présence des attributs category et region
-construire des agrégations :
-ventes par catégorie
-ventes par région
-évolution temporelle des catégories
-identifier les catégories en déclin selon les régions et les périodes temporelles
+- vérifier la présence des attributs `category` et `region`;
+- construire des agrégations de ventes par catégorie, région et trimestre;
+- identifier les catégories en déclin selon les régions et les périodes temporelles.
 
 Cette approche permettra de transformer les données transactionnelles en information stratégique exploitable par la direction.
-

@@ -27,3 +27,15 @@ Ce journal documente les choix de modelisation importants du projet. Chaque entr
 - **Consequences :** Les prochaines analyses pourront reutiliser ces dimensions conformes pour comparer les ventes avec d'autres faits, comme les retours ou les budgets.
 - **Revisable si :** Une future seance introduit une nouvelle question qui exige une dimension supplementaire ou une historisation plus avancee.
 - **References :** `sql/dims/dim_product.sql`, `sql/dims/dim_store.sql`, `sql/dims/dim_customer.sql`, `sql/dims/dim_channel.sql`, `sql/dims/dim_date.sql`, `docs/schema-v1.md`.
+
+### D03 - Historiser les attributs analytiques de `dim_customer`
+
+- **Date / seance :** 2026-05-15 (S03)
+- **Contexte :** Les clients peuvent changer de ville, de province ou de segment de fidelite. Si ces changements ecrasent l'ancienne valeur, les rapports historiques peuvent attribuer des ventes passees au mauvais segment ou a la mauvaise region.
+- **Decision :** `city`, `province` et `loyalty_segment` sont traites en SCD Type 2 avec `effective_from`, `effective_to` et `is_current`.
+- **Alternatives ecartees :**
+  - Type 1 pour tous les attributs : plus simple, mais reecrit l'histoire des ventes.
+  - Type 3 : utile pour une seule transition, mais insuffisant si un client change plusieurs fois.
+- **Consequences :** Un meme `customer_id` peut avoir plusieurs `customer_key`. Les faits doivent joindre la version client valide a la date de l'evenement.
+- **Revisable si :** Les changements arrivent en retard ou si le modele doit corriger des periodes historiques deja chargees.
+- **References :** `sql/dims/dim_customer.sql`, `sql/facts/fact_sales.sql`, `sql/analysis/s03-scd2-proof.sql`, `answers/S03_executive_brief.md`.

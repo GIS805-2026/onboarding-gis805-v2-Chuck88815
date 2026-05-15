@@ -27,10 +27,10 @@ LEFT JOIN dim_date d
     ON CAST(f.order_date AS DATE) = d.date_key
 LEFT JOIN dim_customer c
     ON f.customer_id = c.customer_id
+   AND CAST(f.order_date AS DATE) BETWEEN c.effective_from AND c.effective_to
 LEFT JOIN dim_product p
     ON f.product_id = p.product_id
 LEFT JOIN dim_store s
     ON f.store_id = s.store_id
 LEFT JOIN dim_channel ch
     ON f.channel_id = ch.channel_id;
-
